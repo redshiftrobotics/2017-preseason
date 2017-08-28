@@ -22,7 +22,7 @@ public class NewAutonomous extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException  {
         DcMotor1 = hardwareMap.dcMotor.get("motor2");
-        colorSensor = hardwareMap.colorSensor.get("")
+        //colorSensor = hardwareMap.colorSensor.get("")
 
         waitForStart();
 
