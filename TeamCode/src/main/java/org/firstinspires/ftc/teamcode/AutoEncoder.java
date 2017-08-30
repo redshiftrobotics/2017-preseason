@@ -21,6 +21,10 @@ public class AutoEncoder extends LinearOpMode{
         motorR.setDirection(DcMotorSimple.Direction.REVERSE);
         waitForStart();
         moveForRotations(0.5f);
+        Thread.sleep(1000);
+        moveForRotations(2.0f);
+        Thread.sleep(200);
+        moveForRotations(1.0f);
     }
 
     public void startAllMotors(){
