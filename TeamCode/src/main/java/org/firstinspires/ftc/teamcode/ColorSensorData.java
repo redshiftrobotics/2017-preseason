@@ -14,9 +14,9 @@ public class ColorSensorData {
     }
 
     public String GetColor(){
-        if (cs.red() > 3){
+        if (cs.red() >= 3){
             return "Red";
-        }else if(cs.blue() > 3){
+        }else if(cs.blue() >= 2){
             return "Blue";
         }else{
             return "Neither";
