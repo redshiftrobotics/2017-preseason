@@ -32,30 +32,30 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.adafruit.AdafruitBNO055IMU;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous(name = "IMU test")
-public class IMU extends OpMode {
+public class IMU extends LinearOpMode {
   private ElapsedTime runtime = new ElapsedTime();
-  private AdafruitBNO055IMU imu;
-  private Movement movement;
   private DcMotor m0;
   private DcMotor m1;
-
+  private Movement movement;
   @Override
-  public void init() {
-    movement = new Movement(imu, m0, m1);
-    imu = new AdafruitBNO055IMU(hardwareMap.i2cDeviceSynch.get("imu"));
+  public void runOpMode() {
     telemetry.addData("Status", "Initialized");
-  }
-
-  @Override
-  public void loop() {
+    m0 = hardwareMap.dcMotor.get("m0");
+    m1 = hardwareMap.dcMotor.get("m1");
+    movement = new Movement(hardwareMap.i2cDeviceSynch.get("imu"), m0, m1, telemetry);
+    waitForStart();
     telemetry.addData("Status", "Run Time: " + runtime.toString());
-    telemetry.addData("imu orietation", imu.getAngularOrientation().firstAngle);
+    telemetry.addData("imu orientation", movement.getAngle());
+    movement.turn(90);
+    telemetry.update();
   }
 }
