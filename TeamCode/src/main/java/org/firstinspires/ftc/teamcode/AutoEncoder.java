@@ -20,7 +20,14 @@ public class AutoEncoder extends LinearOpMode{
         motorR = hardwareMap.dcMotor.get("motorRight");
         motorR.setDirection(DcMotorSimple.Direction.REVERSE);
         waitForStart();
+
+        telemetry.addData("Half rotation: ", "");
+        telemetry.update();
         moveForRotations(0.5f);
+        Thread.sleep(3000);
+        telemetry.addData("test of 10 inches: ", "");
+        telemetry.update();
+        moveForInches(10f);
     }
 
     public void startAllMotors(){
@@ -28,15 +35,21 @@ public class AutoEncoder extends LinearOpMode{
         motorR.setPower(1);
     }
 
+    public void moveForInches(float inches) {
+        moveForRotations(inches/12f);
+    }
+
     public void moveForRotations(float input) {
         int rot = Math.round(input * fullEncoder);
 
         int startEncoderCount = motorL.getCurrentPosition();
 
-        while (motorL.getCurrentPosition() <= startEncoderCount+rot) {
+        while (motorL.getCurrentPosition() <= startEncoderCount+rot && opModeIsActive()) {
             startAllMotors();
             telemetry.addData("in while loop: ", motorL.getCurrentPosition());
             telemetry.update();
         }
+        motorL.setPower(0);
+        motorR.setPower(0);
     }
 }
