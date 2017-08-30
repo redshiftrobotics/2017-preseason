@@ -51,7 +51,7 @@ public class IMU extends LinearOpMode {
     telemetry.addData("Status", "Initialized");
     m0 = hardwareMap.dcMotor.get("m0");
     m1 = hardwareMap.dcMotor.get("m1");
-    movement = new Movement(hardwareMap.i2cDeviceSynch.get("imu"), m0, m1, telemetry);
+    movement = new Movement(hardwareMap.i2cDeviceSynch.get("imu"), m0, m1, telemetry, this);
     waitForStart();
     telemetry.addData("Status", "Run Time: " + runtime.toString());
     telemetry.addData("imu orientation", movement.getAngle());

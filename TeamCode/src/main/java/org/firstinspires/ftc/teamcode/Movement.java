@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.adafruit.AdafruitBNO055IMU;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 
@@ -14,11 +16,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Movement {
     BNO055IMU imu;
-    BNO055IMU.Parameters imuParameters;
+    public BNO055IMU.Parameters imuParameters;
     DcMotor m0;
     DcMotor m1;
     Telemetry tm;
-    Movement(I2cDeviceSynch imuHardware, DcMotor m0, DcMotor m1, Telemetry tm) {
+    LinearOpMode opmode;
+    Movement(I2cDeviceSynch imuHardware, DcMotor m0, DcMotor m1, Telemetry tm, LinearOpMode opmode) {
 
         imuParameters = new BNO055IMU.Parameters();
         imuParameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -26,8 +29,10 @@ public class Movement {
         imu = new AdafruitBNO055IMU(imuHardware);
         imu.initialize(imuParameters);
         this.m0 = m0;
+        this.m0.setDirection(DcMotorSimple.Direction.REVERSE);
         this.m1 = m1;
         this.tm = tm;
+        this.opmode = opmode;
     }
 
     public float getAngle() {
@@ -35,12 +40,16 @@ public class Movement {
     }
 
     public void turn (float target) {
-        while (Math.abs(this.imu.getAngularOrientation().firstAngle - target) > 0.3) {
-            tm.addData("termination condition", Math.abs(this.imu.getAngularOrientation().firstAngle - target));
-            m0.setPower(Math.max(Math.min(-((imu.getAngularOrientation().firstAngle - target)/180)+.2, -1), 1));
-            m1.setPower(Math.max(Math.min(((imu.getAngularOrientation().firstAngle - target)/180)+.2, -1), 1));
-            tm.addData("motor value:", (Math.max(Math.min(((imu.getAngularOrientation().firstAngle - target)/180)+.2, -1), 1)));
+        float error;
+        float motorValue;
+        while (Math.abs(this.imu.getAngularOrientation().firstAngle - target) > 0.3 && opmode.opModeIsActive()) {
+            error = target - imu.getAngularOrientation().firstAngle;
+            motorValue = (error / 180);
+            m0.setPower(motorValue);
+            m1.setPower(-motorValue);
             tm.update();
         }
+        m0.setPower(0);
+        m1.setPower(0);
     }
 }
