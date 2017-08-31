@@ -17,8 +17,8 @@ public class BasicTankDrive extends OpMode {
     @Override
     public void init() {
 
-        Left = hardwareMap.dcMotor.get("Left");
-        Right = hardwareMap.dcMotor.get("Right");
+        Left = hardwareMap.dcMotor.get("motorLeft");
+        Right = hardwareMap.dcMotor.get("motorRight");
         Left.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
