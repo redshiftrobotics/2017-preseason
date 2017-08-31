@@ -10,12 +10,16 @@ public class MainAuto extends LinearOpMode {
     DcMotor motorL;
     DcMotor motorR;
     static float fullEncoder = 1440.0f;
+    Movement movement;
 
     @Override
     public void runOpMode() throws InterruptedException {
         motorL = hardwareMap.dcMotor.get("motorLeft");
         motorR = hardwareMap.dcMotor.get("motorRight");
         motorR.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        movement = new Movement(hardwareMap.i2cDeviceSynch.get("imu"), motorL, motorR, telemetry, this);
+
         waitForStart();
 
         telemetry.addData("moving forward 56 inches", "");
@@ -24,7 +28,7 @@ public class MainAuto extends LinearOpMode {
 
         telemetry.addData("turning right", "");
         telemetry.update();
-        turn(false, 1.2f);
+        turn(90f);
 
         telemetry.addData("moving forward 93 inches", "");
         telemetry.update();
@@ -32,15 +36,15 @@ public class MainAuto extends LinearOpMode {
 
         telemetry.addData("turning right", "");
         telemetry.update();
-        turn(false, 1.35f);
+        turn(180f);
 
         telemetry.addData("moving forward 40 inches", "");
         telemetry.update();
-        moveForInches(40);
+        moveForInches(90);
 
         telemetry.addData("turning right", "");
         telemetry.update();
-        turn(false, 1.35f);
+        turn(270f);
 
         telemetry.addData("moving forward 98 inches", "");
         telemetry.update();
@@ -48,7 +52,7 @@ public class MainAuto extends LinearOpMode {
 
         telemetry.addData("turning right", "");
         telemetry.update();
-        turn(false, 1.2f);
+        turn(360f);
 
         telemetry.addData("moving forward 40 inches", "");
         telemetry.update();
@@ -64,25 +68,8 @@ public class MainAuto extends LinearOpMode {
         moveForRotations(inches/12f);
     }
 
-    public void turn(boolean left, float turnVal) {
-        int rot = Math.round(turnVal * fullEncoder);
-        int startEncoderCount = motorL.getCurrentPosition();
-
-        if (left){
-            while (motorL.getCurrentPosition() <= startEncoderCount+rot && opModeIsActive()) {
-                motorL.setPower(0);
-                motorR.setPower(0.5);
-                telemetry.addData("in while loop: ", motorL.getCurrentPosition());
-                telemetry.update();
-            }
-        }else{
-            while (motorL.getCurrentPosition() <= startEncoderCount+rot && opModeIsActive()) {
-                motorL.setPower(0.5);
-                motorR.setPower(0);
-                telemetry.addData("in while loop: ", motorL.getCurrentPosition());
-                telemetry.update();
-            }
-        }
+    public void turn(float degrese) {
+        movement.turn(degrese);
     }
 
     public void moveForRotations(float input) {
