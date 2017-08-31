@@ -23,10 +23,17 @@ public class AutoEncoder extends LinearOpMode{
         telemetry.addData("Half rotation: ", "");
         telemetry.update();
         moveForRotations(0.5f);
+<<<<<<< HEAD
+        Thread.sleep(1000);
+        moveForRotations(2.0f);
+        Thread.sleep(200);
+        moveForRotations(1.0f);
+=======
         Thread.sleep(3000);
         telemetry.addData("test of 10 inches: ", "");
         telemetry.update();
         moveForInches(10f);
+>>>>>>> a549f48f9135937055ed2d1124743cd5497b8c08
     }
 
     public void startAllMotors(){
