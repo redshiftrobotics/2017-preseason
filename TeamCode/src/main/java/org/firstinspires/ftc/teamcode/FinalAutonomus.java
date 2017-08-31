@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
 
 /**
  * Created by Owen Sangster on 8/30/2017.
@@ -26,15 +27,31 @@ public class FinalAutonomus extends LinearOpMode {
         motorL.setDirection(DcMotorSimple.Direction.REVERSE);
         ColorSensor cs = hardwareMap.colorSensor.get("cs");
         color = new ColorSensorData(cs);
+        I2cDeviceSynch imu = hardwareMap.i2cDeviceSynch.get("imu");
+        Movement movement = new Movement(imu, motorL, motorR, telemetry, this);
         waitForStart();
+
+        float angleCounter = 0f;
         moveForInches(40);
         //Turn right 90
+        angleCounter += 90;
+        movement.turn(angleCounter % 360);
+
         moveForInches(100);
         //turn right 90
+        angleCounter += 90;
+        movement.turn(angleCounter % 360);
+
         moveForInches(35);
         //turn right 90
+        angleCounter += 90;
+        movement.turn(angleCounter % 360);
+
         moveForInches(110);
-        //turn right 90
+
+        angleCounter += 90;
+        movement.turn(angleCounter % 360);
+
         motorL.setPower(0.2);
         motorR.setPower(0.2);
 
